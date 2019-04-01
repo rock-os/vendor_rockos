@@ -15,6 +15,6 @@
 #
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/beetle_arm.mk \
-    $(LOCAL_DIR)/beetle_arm64.mk \
-    $(LOCAL_DIR)/beetle_x86.mk
+    $(LOCAL_DIR)/rockos_arm.mk \
+    $(LOCAL_DIR)/rockos_arm64.mk \
+    $(LOCAL_DIR)/rockos_x86.mk

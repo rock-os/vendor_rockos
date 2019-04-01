@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Copyright (C) 2012-2013, The CyanogenMod Project
 # Copyright (C) 2012-2015, SlimRoms Project
-# Copyright (C) 2017, BEETLE
+# Copyright (C) 2017, ROCKOS
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -41,12 +41,12 @@ except ImportError:
     urllib.request = urllib2
 
 DEBUG = False
-default_manifest = ".repo/manifests/beetle_default.xml"
-custom_local_manifest = ".repo/local_manifests/beetle_manifest.xml"
+default_manifest = ".repo/manifests/rockos_default.xml"
+custom_local_manifest = ".repo/local_manifests/rockos_manifest.xml"
 custom_default_revision = "8.1"
-custom_dependencies = "beetle.dependencies"
-org_manifest = "BEETLE-Devices"  # leave empty if org is provided in manifest
-org_display = "BEETLE-Devices"  # needed for displaying
+custom_dependencies = "rockos.dependencies"
+org_manifest = "ROCKOS-Devices"  # leave empty if org is provided in manifest
+org_display = "ROCKOS-Devices"  # needed for displaying
 
 github_auth = None
 

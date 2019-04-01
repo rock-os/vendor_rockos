@@ -3,10 +3,10 @@
 #    BOARD_HAL_STATIC_LIBRARIES := libhealthd.cm
 #endif
 
-include vendor/beetle/config/BoardConfigKernel.mk
+include vendor/rockos/config/BoardConfigKernel.mk
 
 ifeq ($(BOARD_USES_QCOM_HARDWARE),true)
-include vendor/beetle/config/BoardConfigQcom.mk
+include vendor/rockos/config/BoardConfigQcom.mk
 endif
 
-include vendor/beetle/config/BoardConfigSoong.mk
+include vendor/rockos/config/BoardConfigSoong.mk

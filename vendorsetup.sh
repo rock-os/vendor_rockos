@@ -1,3 +1,3 @@
-. "$(gettop)/vendor/beetle/build/envsetup.sh"
+. "$(gettop)/vendor/rockos/build/envsetup.sh"
 
-beetle_device_combos
+rockos_device_combos

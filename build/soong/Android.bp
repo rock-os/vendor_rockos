@@ -1,14 +1,14 @@
 bootstrap_go_package {
-    name: "soong-beetle",
-    pkgPath: "beetle/soong/android",
+    name: "soong-rockos",
+    pkgPath: "rockos/soong/android",
     srcs: [
         "android/variable.go",
     ],
 }
 
 bootstrap_go_package {
-    name: "soong-beetle-generator",
-    pkgPath: "beetle/soong/generator",
+    name: "soong-rockos-generator",
+    pkgPath: "rockos/soong/generator",
     deps: [
         "blueprint",
         "blueprint-pathtools",
@@ -23,7 +23,7 @@ bootstrap_go_package {
     pluginFor: ["soong_build"],
 }
 
-beetle_generator {
+rockos_generator {
     name: "generated_kernel_includes",
 
     // The headers make command

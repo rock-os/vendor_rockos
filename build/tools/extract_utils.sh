@@ -44,7 +44,7 @@ trap cleanup 0
 #
 # $1: device name
 # $2: vendor name
-# $3: BEETLE root directory
+# $3: ROCKOS root directory
 # $4: is common device - optional, default to false
 # $5: cleanup - optional, default to true
 # $6: custom vendor makefile name - optional, default to false
@@ -65,15 +65,15 @@ function setup_vendor() {
         exit 1
     fi
 
-    export BEETLE_ROOT="$3"
-    if [ ! -d "$BEETLE_ROOT" ]; then
-        echo "\$BEETLE_ROOT must be set and valid before including this script!"
+    export ROCKOS_ROOT="$3"
+    if [ ! -d "$ROCKOS_ROOT" ]; then
+        echo "\$ROCKOS_ROOT must be set and valid before including this script!"
         exit 1
     fi
 
     export OUTDIR=vendor/"$VENDOR"/"$DEVICE"
-    if [ ! -d "$BEETLE_ROOT/$OUTDIR" ]; then
-        mkdir -p "$BEETLE_ROOT/$OUTDIR"
+    if [ ! -d "$ROCKOS_ROOT/$OUTDIR" ]; then
+        mkdir -p "$ROCKOS_ROOT/$OUTDIR"
     fi
 
     VNDNAME="$6"
@@ -81,9 +81,9 @@ function setup_vendor() {
         VNDNAME="$DEVICE"
     fi
 
-    export PRODUCTMK="$BEETLE_ROOT"/"$OUTDIR"/"$VNDNAME"-vendor.mk
-    export ANDROIDMK="$BEETLE_ROOT"/"$OUTDIR"/Android.mk
-    export BOARDMK="$BEETLE_ROOT"/"$OUTDIR"/BoardConfigVendor.mk
+    export PRODUCTMK="$ROCKOS_ROOT"/"$OUTDIR"/"$VNDNAME"-vendor.mk
+    export ANDROIDMK="$ROCKOS_ROOT"/"$OUTDIR"/Android.mk
+    export BOARDMK="$ROCKOS_ROOT"/"$OUTDIR"/BoardConfigVendor.mk
 
     if [ "$4" == "true" ] || [ "$4" == "1" ]; then
         COMMON=1
@@ -738,15 +738,15 @@ function get_file() {
 # Convert apk|jar .odex in the corresposing classes.dex
 #
 function oat2dex() {
-    local BEETLE_TARGET="$1"
+    local ROCKOS_TARGET="$1"
     local OEM_TARGET="$2"
     local SRC="$3"
     local TARGET=
     local OAT=
 
     if [ -z "$BAKSMALIJAR" ] || [ -z "$SMALIJAR" ]; then
-        export BAKSMALIJAR="$BEETLE_ROOT"/vendor/beetle/build/tools/smali/baksmali.jar
-        export SMALIJAR="$BEETLE_ROOT"/vendor/beetle/build/tools/smali/smali.jar
+        export BAKSMALIJAR="$ROCKOS_ROOT"/vendor/rockos/build/tools/smali/baksmali.jar
+        export SMALIJAR="$ROCKOS_ROOT"/vendor/rockos/build/tools/smali/smali.jar
     fi
 
     # Extract existing boot.oats to the temp folder
@@ -771,11 +771,11 @@ function oat2dex() {
         FULLY_DEODEXED=1 && return 0 # system is fully deodexed, return
     fi
 
-    if [ ! -f "$BEETLE_TARGET" ]; then
+    if [ ! -f "$ROCKOS_TARGET" ]; then
         return;
     fi
 
-    if grep "classes.dex" "$BEETLE_TARGET" >/dev/null; then
+    if grep "classes.dex" "$ROCKOS_TARGET" >/dev/null; then
         return 0 # target apk|jar is already odexed, return
     fi
 
@@ -887,7 +887,7 @@ function extract() {
     fi
 
     if [ -f "$SRC" ] && [ "${SRC##*.}" == "zip" ]; then
-        DUMPDIR="$BEETLE_ROOT"/system_dump
+        DUMPDIR="$ROCKOS_ROOT"/system_dump
 
         # Check if we're working with the same zip that was passed last time.
         # If so, let's just use what's already extracted.
@@ -907,7 +907,7 @@ function extract() {
             # If OTA is block based, extract it.
             elif [ -a "$DUMPDIR"/system.new.dat ]; then
                 echo "Converting system.new.dat to system.img"
-                python "$BEETLE_ROOT"/vendor/beetle/build/tools/sdat2img.py "$DUMPDIR"/system.transfer.list "$DUMPDIR"/system.new.dat "$DUMPDIR"/system.img 2>&1
+                python "$ROCKOS_ROOT"/vendor/rockos/build/tools/sdat2img.py "$DUMPDIR"/system.transfer.list "$DUMPDIR"/system.new.dat "$DUMPDIR"/system.img 2>&1
                 rm -rf "$DUMPDIR"/system.new.dat "$DUMPDIR"/system
                 mkdir "$DUMPDIR"/system "$DUMPDIR"/tmp
                 echo "Requesting sudo access to mount the system.img"
@@ -999,7 +999,7 @@ function extract() {
                 adb pull "/$FILE" "$DEST"
             fi
         else
-            # Try BEETLE target first
+            # Try ROCKOS target first
             if [ -f "$SRC/$TARGET" ]; then
                 cp "$SRC/$TARGET" "$DEST"
             # if file does not exist try OEM target
@@ -1059,7 +1059,7 @@ function extract_firmware() {
     local FILELIST=( ${PRODUCT_COPY_FILES_LIST[@]} )
     local COUNT=${#FILELIST[@]}
     local SRC="$2"
-    local OUTPUT_DIR="$BEETLE_ROOT"/"$OUTDIR"/radio
+    local OUTPUT_DIR="$ROCKOS_ROOT"/"$OUTDIR"/radio
 
     if [ "$VENDOR_RADIO_STATE" -eq "0" ]; then
         echo "Cleaning firmware output directory ($OUTPUT_DIR).."

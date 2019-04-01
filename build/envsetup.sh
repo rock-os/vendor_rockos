@@ -1,11 +1,11 @@
-# beetle functions that extend build/envsetup.sh
+# RockOS functions that extend build/envsetup.sh
 
-function beetle_device_combos()
+function rockos_device_combos()
 {
     local T list_file variant device
 
     T="$(gettop)"
-    list_file="${T}/vendor/beetle/beetle.devices"
+    list_file="${T}/vendor/rockos/rockos.devices"
     variant="userdebug"
 
     if [[ $1 ]]
@@ -27,45 +27,45 @@ function beetle_device_combos()
     if [[ ! -f "${list_file}" ]]
     then
         echo "unable to find device list: ${list_file}"
-        list_file="${T}/vendor/beetle/beetle.devices"
+        list_file="${T}/vendor/rockos/rockos.devices"
         echo "defaulting device list file to: ${list_file}"
     fi
 
     while IFS= read -r device
     do
-        add_lunch_combo "beetle_${device}-${variant}"
+        add_lunch_combo "rockos_${device}-${variant}"
     done < "${list_file}"
 }
 
-function beetle_rename_function()
+function rockos_rename_function()
 {
-    eval "original_beetle_$(declare -f ${1})"
+    eval "original_rockos_$(declare -f ${1})"
 }
 
-function _beetle_build_hmm() #hidden
+function _rockos_build_hmm() #hidden
 {
     printf "%-8s %s" "${1}:" "${2}"
 }
 
-function beetle_append_hmm()
+function rockos_append_hmm()
 {
-    HMM_DESCRIPTIVE=("${HMM_DESCRIPTIVE[@]}" "$(_beetle_build_hmm "$1" "$2")")
+    HMM_DESCRIPTIVE=("${HMM_DESCRIPTIVE[@]}" "$(_rockos_build_hmm "$1" "$2")")
 }
 
-function beetle_add_hmm_entry()
+function rockos_add_hmm_entry()
 {
     for c in ${!HMM_DESCRIPTIVE[*]}
     do
         if [[ "${1}" == $(echo "${HMM_DESCRIPTIVE[$c]}" | cut -f1 -d":") ]]
         then
-            HMM_DESCRIPTIVE[${c}]="$(_beetle_build_hmm "$1" "$2")"
+            HMM_DESCRIPTIVE[${c}]="$(_rockos_build_hmm "$1" "$2")"
             return
         fi
     done
-    beetle_append_hmm "$1" "$2"
+    rockos_append_hmm "$1" "$2"
 }
 
-function beetleremote()
+function rockosremote()
 {
     local proj pfx project
 
@@ -74,7 +74,7 @@ function beetleremote()
         echo "Not in a git directory. Please run this from an Android repository you wish to set up."
         return
     fi
-    git remote rm beetle 2> /dev/null
+    git remote rm rockos 2> /dev/null
 
     proj="$(pwd -P | sed "s#$ANDROID_BUILD_TOP/##g")"
 
@@ -84,8 +84,8 @@ function beetleremote()
 
     project="${proj//\//_}"
 
-    git remote add beetle "git@github.com:BEETLE/$pfx$project"
-    echo "Remote 'beetle' created"
+    git remote add rockos "git@github.com:ROCKOS/$pfx$project"
+    echo "Remote 'rockos' created"
 }
 
 function cmremote()
@@ -145,11 +145,11 @@ function cafremote()
     echo "Remote 'caf' created"
 }
 
-function beetle_push()
+function rockos_push()
 {
     local branch ssh_name path_opt proj
     branch="lp5.1"
-    ssh_name="beetle_review"
+    ssh_name="rockos_review"
     path_opt=
 
     if [[ "$1" ]]
@@ -167,24 +167,24 @@ function beetle_push()
         proj="android_$proj"
     fi
 
-    git $path_opt push "ssh://${ssh_name}/BEETLE/$proj" "HEAD:refs/for/$branch"
+    git $path_opt push "ssh://${ssh_name}/ROCKOS/$proj" "HEAD:refs/for/$branch"
 }
 
 
-beetle_rename_function hmm
+rockos_rename_function hmm
 function hmm() #hidden
 {
     local i T
     T="$(gettop)"
-    original_beetle_hmm
+    original_rockos_hmm
     echo
 
-    echo "vendor/beetle extended functions. The complete list is:"
-    for i in $(grep -P '^function .*$' "$T/vendor/beetle/build/envsetup.sh" | grep -v "#hidden" | sed 's/function \([a-z_]*\).*/\1/' | sort | uniq); do
+    echo "vendor/rockos extended functions. The complete list is:"
+    for i in $(grep -P '^function .*$' "$T/vendor/rockos/build/envsetup.sh" | grep -v "#hidden" | sed 's/function \([a-z_]*\).*/\1/' | sort | uniq); do
         echo "$i"
     done |column
 }
 
-beetle_append_hmm "beetleremote" "Add a git remote for matching beetle repository"
-beetle_append_hmm "aospremote" "Add git remote for matching AOSP repository"
-beetle_append_hmm "cafremote" "Add git remote for matching CodeAurora repository."
+rockos_append_hmm "rockosremote" "Add a git remote for matching rockos repository"
+rockos_append_hmm "aospremote" "Add git remote for matching AOSP repository"
+rockos_append_hmm "cafremote" "Add git remote for matching CodeAurora repository."

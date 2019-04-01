@@ -2,7 +2,7 @@
 
 # Exports
 
-. $ANDROID_BUILD_TOP/vendor/beetle/tools/colors
+. $ANDROID_BUILD_TOP/vendor/rockos/tools/colors
 
 export Changelog=Changelog.txt
 
